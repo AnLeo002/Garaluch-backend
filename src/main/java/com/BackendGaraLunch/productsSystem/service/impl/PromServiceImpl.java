@@ -57,7 +57,7 @@ public class PromServiceImpl implements PromService {
                 .map(promEntity ->
                         new PromDTOResponse(promEntity.getId(),promEntity.getName(),promEntity.getDescription(),promEntity.getStartDate(),promEntity.getEndDate(),promEntity.getPrice(), promEntity.getUrl(),promEntity.getAmount(),
                                 promEntity.getProductEntities().stream()
-                                    .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(), product.getUrl()))
+                                    .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(), product.getUrl(),product.getWeight()))
                                     .collect(Collectors.toSet())))
                 .collect(Collectors.toList());
     }
@@ -67,7 +67,7 @@ public class PromServiceImpl implements PromService {
         return promRepo.findById(id)
                 .map(promEntity -> new PromDTOResponse(promEntity.getId(),promEntity.getName(),promEntity.getDescription(),promEntity.getStartDate(),promEntity.getEndDate(),promEntity.getPrice(), promEntity.getUrl(),promEntity.getAmount(),
                         promEntity.getProductEntities().stream()
-                                .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(),product.getUrl()))
+                                .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(),product.getUrl(),product.getWeight()))
                                 .collect(Collectors.toSet())))
                 .orElseThrow();
     }
@@ -77,7 +77,7 @@ public class PromServiceImpl implements PromService {
         return promRepo.findPromEntityByName(name)
                 .map(promEntity -> new PromDTOResponse(promEntity.getId(),promEntity.getName(),promEntity.getDescription(),promEntity.getStartDate(),promEntity.getEndDate(),promEntity.getPrice(), promEntity.getUrl(),promEntity.getAmount(),
                         promEntity.getProductEntities().stream()
-                                .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(),product.getUrl()))
+                                .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(),product.getUrl(),product.getWeight()))
                                 .collect(Collectors.toSet())))
                 .orElseThrow();
     }
@@ -99,7 +99,7 @@ public class PromServiceImpl implements PromService {
         PromEntity promSave = promRepo.save(prom);
 
         Set<ProductDTOResponse> productDTOResponseSet = promSave.getProductEntities().stream()
-                .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(),product.getUrl()))
+                .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(),product.getUrl(),product.getWeight()))
                 .collect(Collectors.toSet());
         return new PromDTOResponse(promSave.getId(),promSave.getName(),promSave.getDescription(),promSave.getStartDate(),promSave.getEndDate(),promSave.getPrice(), promSave.getUrl(),promSave.getAmount(),productDTOResponseSet);
     }

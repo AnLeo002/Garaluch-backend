@@ -15,5 +15,6 @@ public record ProductDTOResponse(Long id,
                                  @NonNull String description,
                                  @NonNull LocalDate dayBuying,
                                  @NonNull String category,
-                                 String url) {
+                                 String url,
+                                 String weight) {
 }

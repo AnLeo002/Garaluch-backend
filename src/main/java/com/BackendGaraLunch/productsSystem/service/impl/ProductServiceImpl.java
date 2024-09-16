@@ -24,13 +24,13 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepo categoryRepo;
     @Override
     public ProductDTOResponse findProductById(Long id) {
-        return repo.findById(id).map(productEntity -> new ProductDTOResponse(productEntity.getId(), productEntity.getName(), productEntity.getAmount(), productEntity.getPrice(), productEntity.getDescription(),productEntity.getDateBuying(),productEntity.getCategory().getName(),productEntity.getUrl()))
+        return repo.findById(id).map(productEntity -> new ProductDTOResponse(productEntity.getId(), productEntity.getName(), productEntity.getAmount(), productEntity.getPrice(), productEntity.getDescription(),productEntity.getDateBuying(),productEntity.getCategory().getName(),productEntity.getUrl(),productEntity.getWeight()))
                 .orElseThrow(()->new RuntimeException("El producto no se encuentra registrado en la base de datos"));
     }
 
     @Override
     public ProductDTOResponse findProductByName(String name) {
-        return repo.findProductEntityByName(name).map(productEntity -> new ProductDTOResponse(productEntity.getId(), productEntity.getName(), productEntity.getAmount(), productEntity.getPrice(), productEntity.getDescription(),productEntity.getDateBuying(),productEntity.getCategory().getName(),productEntity.getUrl()))
+        return repo.findProductEntityByName(name).map(productEntity -> new ProductDTOResponse(productEntity.getId(), productEntity.getName(), productEntity.getAmount(), productEntity.getPrice(), productEntity.getDescription(),productEntity.getDateBuying(),productEntity.getCategory().getName(),productEntity.getUrl(),productEntity.getWeight()))
                 .orElseThrow(()->new RuntimeException("El producto no se encuentra registrado en la base de datos"));
     }
 
@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTOResponse> findAllProducts() {
 
         return repo.findAll().stream()
-                .map(productEntity -> new ProductDTOResponse(productEntity.getId(), productEntity.getName(), productEntity.getAmount(), productEntity.getPrice(), productEntity.getDescription(),productEntity.getDateBuying(),productEntity.getCategory().getName(),productEntity.getUrl()))
+                .map(productEntity -> new ProductDTOResponse(productEntity.getId(), productEntity.getName(), productEntity.getAmount(), productEntity.getPrice(), productEntity.getDescription(),productEntity.getDateBuying(),productEntity.getCategory().getName(),productEntity.getUrl(),productEntity.getWeight()))
                 .collect(Collectors.toList());
     }
 
@@ -54,13 +54,14 @@ public class ProductServiceImpl implements ProductService {
                 .amount(productDTO.amount())
                 .dateBuying(LocalDate.parse(productDTO.dayBuying(),dateTimeFormatter))
                 .price(productDTO.price())
+                .weight(productDTO.weight())
                 .description(productDTO.description())
                 .category(categoryEntity)
                 .url(productDTO.url())
                 .build();
         ProductEntity productSave = repo.save(product);
 
-            return new ProductDTOResponse(productSave.getId(), productSave.getName(), productSave.getAmount(), productSave.getPrice(), productSave.getDescription(),productSave.getDateBuying(),productSave.getCategory().getName(),productSave.getUrl());
+            return new ProductDTOResponse(productSave.getId(), productSave.getName(), productSave.getAmount(), productSave.getPrice(), productSave.getDescription(),productSave.getDateBuying(),productSave.getCategory().getName(),productSave.getUrl(),productSave.getWeight());
     }
 
     @Override
@@ -72,12 +73,13 @@ public class ProductServiceImpl implements ProductService {
         product.setAmount(productDTO.amount());
         product.setName(productDTO.name());
         product.setPrice(productDTO.price());
+        product.setWeight(productDTO.weight());
         product.setDescription(productDTO.description());
         product.setUrl(productDTO.url());
         product.setCategory(categoryEntity);
         ProductEntity productSave = repo.save(product);
 
-        return new ProductDTOResponse(productSave.getId(), productSave.getName(), productSave.getAmount(), productSave.getPrice(), productSave.getDescription(),productSave.getDateBuying(),productSave.getCategory().getName(),productSave.getUrl());
+        return new ProductDTOResponse(productSave.getId(), productSave.getName(), productSave.getAmount(), productSave.getPrice(), productSave.getDescription(),productSave.getDateBuying(),productSave.getCategory().getName(),productSave.getUrl(),productSave.getWeight());
     }
 
     @Override
