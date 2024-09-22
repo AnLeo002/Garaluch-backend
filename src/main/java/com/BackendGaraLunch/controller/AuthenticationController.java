@@ -1,9 +1,6 @@
 package com.BackendGaraLunch.controller;
 
-import com.BackendGaraLunch.controller.dto.AuthCreateUserRequest;
-import com.BackendGaraLunch.controller.dto.AuthLoginRequest;
-import com.BackendGaraLunch.controller.dto.AuthResponse;
-import com.BackendGaraLunch.controller.dto.AuthUpdateUserRequest;
+import com.BackendGaraLunch.controller.dto.*;
 import com.BackendGaraLunch.persistence.UserEntity;
 import com.BackendGaraLunch.repo.UserRepo;
 import com.BackendGaraLunch.service.UserDetailsServiceImpl;
@@ -71,7 +68,7 @@ public class AuthenticationController {
         }
     }
     @GetMapping("/sessionUser/{username}")
-    public UserEntity getSessionUser(@PathVariable String username){
-        return repo.findUserEntityByUsername(username).get();
+    public UserResponse getSessionUser(@PathVariable String username){
+        return userService.findUserByUsername(username);
     }
 }

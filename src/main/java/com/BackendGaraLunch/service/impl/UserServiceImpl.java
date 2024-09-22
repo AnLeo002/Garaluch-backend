@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAll() {
         List<UserResponse> userResponseList = repo.findAll().stream()
-                .map(user -> new UserResponse(user.getUsername(),null, user.getName(), user.getLastName(), user.getEmail(), user.getTel(),user.getRoles()))
+                .map(user -> new UserResponse(user.getId(), user.getUsername(),null, user.getName(), user.getLastName(), user.getEmail(), user.getTel(),user.getRoles()))
                 .collect(Collectors.toList());
         return userResponseList;
     }
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findUserByUsername(String username) {
         UserResponse userResponse = repo.findUser(username).stream().findFirst()//Con esto podemos generar un mapeo(cambio) del objeto
-                .map(user -> new UserResponse(user.getUsername(),user.getPassword(), user.getName(), user.getLastName(), user.getEmail(), user.getTel(),user.getRoles()))
+                .map(user -> new UserResponse(user.getId(),user.getUsername(),user.getPassword(), user.getName(), user.getLastName(), user.getEmail(), user.getTel(),user.getRoles()))
                 .orElseThrow();
         return userResponse;
     }
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
         repo.save(user);
 
-        return new UserResponse(userRequest.username(), userRequest.password(), userRequest.name(), userRequest.lastName(), userRequest.email(), userRequest.tel(), roleEntitySet);
+        return new UserResponse(user.getId(),userRequest.username(), userRequest.password(), userRequest.name(), userRequest.lastName(), userRequest.email(), userRequest.tel(), roleEntitySet);
     }
 
     @Override
