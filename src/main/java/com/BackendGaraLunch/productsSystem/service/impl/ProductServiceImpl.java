@@ -91,11 +91,14 @@ public class ProductServiceImpl implements ProductService {
     public void updateAmountProductInvoiceList(List<ProductInvoiceDTOResponse> productInvoiceDTOResponses) {
 
         productInvoiceDTOResponses.stream()
-                .map(productUpdate -> {
+                .forEach(productUpdate -> {
                     ProductEntity product = repo.findById(productUpdate.id()).get();
-                    product.setAmount(product.getAmount()-productUpdate.amount());
-                    repo.save(product);
-                    return productUpdate;
+                    if(product.getAmount() < productUpdate.amount()){
+                        throw new RuntimeException("La cantidad ingresada no coincide con la cantidad en stock");
+                    }else{
+                        product.setAmount(product.getAmount()-productUpdate.amount());
+                        repo.save(product);
+                    }
                 });
 
     }

@@ -112,11 +112,14 @@ public class PromServiceImpl implements PromService {
     @Override
     public void updateAmountProm(List<PromInvoiceDTOResponse> promInvoiceDTOResponses) {
         promInvoiceDTOResponses.stream()
-                .map(promUpdate -> {
+                .forEach(promUpdate -> {
                     PromEntity prom = promRepo.findById(promUpdate.id()).get();
-                    prom.setAmount(prom.getAmount()-promUpdate.amount());
-                    promRepo.save(prom);
-                    return promUpdate;
+                    if(prom.getAmount() < promUpdate.amount()){
+                        throw new RuntimeException("La cantidad ingresada no coincide con la cantidad en stock");
+                    }else{
+                        prom.setAmount(prom.getAmount()-promUpdate.amount());
+                        promRepo.save(prom);
+                    }
                 });
     }
 }
