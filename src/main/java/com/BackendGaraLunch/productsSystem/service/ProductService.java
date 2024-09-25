@@ -13,7 +13,7 @@ public interface ProductService {
     ProductDTOResponse createProduct(ProductDTO productDTO);
     ProductDTOResponse updateProduct(ProductDTO productDTO,Long id);
     void deleteProduct(Long id);
-    void updateAmountProductInvoiceList(List<ProductInvoiceDTOResponse> productInvoiceDTOResponses);
+    void updateAmountProduct(List<ProductInvoiceDTOResponse> productInvoiceDTOResponses);
 
 
 }

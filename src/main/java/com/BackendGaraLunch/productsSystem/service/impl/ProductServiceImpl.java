@@ -88,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateAmountProductInvoiceList(List<ProductInvoiceDTOResponse> productInvoiceDTOResponses) {
+    public void updateAmountProduct(List<ProductInvoiceDTOResponse> productInvoiceDTOResponses) {
 
         productInvoiceDTOResponses.stream()
                 .forEach(productUpdate -> {

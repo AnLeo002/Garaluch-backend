@@ -57,7 +57,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .total(invoiceDTO.total())
                 .build();
 
-        List<PromInvoiceEntity> promInvoiceEntities = invoiceDTO.promInvoiceDTOList().stream().map(prom -> PromInvoiceEntity.builder()
+        List<PromInvoiceEntity> promInvoiceEntities = invoiceDTO.promInvoiceDTOList().stream().map(prom ->
+                PromInvoiceEntity.builder()
                         .prom(promRepo.findById(prom.id()).orElseThrow(()->new RuntimeException("Promoción no encontrada")))
                         .promAmount(prom.amount())
                         .invoice(invoice)
@@ -70,6 +71,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoice.setProductInvoiceEntities(productInvoiceEntities);
         invoice.setPromInvoiceEntities(promInvoiceEntities);
+
+        promService.updateAmountProm(invoiceDTO.promInvoiceDTOList());
+        productService.updateAmountProduct(invoiceDTO.productInvoiceDTOList());
 
         InvoiceEntity invoiceSave = repo.save(invoice);
 
@@ -131,7 +135,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTOResponse updateAmount(InvoiceDTO invoiceDTO) {
 
-        productService.updateAmountProductInvoiceList(invoiceDTO.productInvoiceDTOList());
+        productService.updateAmountProduct(invoiceDTO.productInvoiceDTOList());
         promService.updateAmountProm(invoiceDTO.promInvoiceDTOList());
 
         return new InvoiceDTOResponse(invoiceDTO.id(), invoiceDTO.username(), invoiceDTO.payment(), invoiceDTO.total(),invoiceDTO.promInvoiceDTOList(),invoiceDTO.productInvoiceDTOList());
