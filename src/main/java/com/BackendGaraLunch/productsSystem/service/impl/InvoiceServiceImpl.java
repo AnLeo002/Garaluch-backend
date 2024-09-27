@@ -16,6 +16,8 @@ import com.BackendGaraLunch.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDTOResponse findInvoiceById(Long id) {
 
         return repo.findById(id)
-                .map(invoice -> new InvoiceDTOResponse(invoice.getId(),invoice.getUser().getUsername(),invoice.isPayment(),invoice.getTotal(),
+                .map(invoice -> new InvoiceDTOResponse(invoice.getId(),invoice.getUser().getUsername(),invoice.isPayment(),invoice.getTotal(),invoice.getDate(),
                                 invoice.getPromInvoiceEntities().stream()
                                         .map(promInvoiceEntity -> new PromInvoiceDTOResponse(promInvoiceEntity.getId(),promInvoiceEntity.getPromAmount()))
                                         .collect(Collectors.toList()),
@@ -55,6 +57,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .user(user)
                 .payment(invoiceDTO.payment())
                 .total(invoiceDTO.total())
+                .date(LocalDate.now())
                 .build();
 
         List<PromInvoiceEntity> promInvoiceEntities = invoiceDTO.promInvoiceDTOList().stream().map(prom ->
@@ -77,7 +80,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         InvoiceEntity invoiceSave = repo.save(invoice);
 
-        return new InvoiceDTOResponse(invoiceSave.getId(),invoiceSave.getUser().getUsername(),invoiceSave.isPayment(),invoiceSave.getTotal(),
+        return new InvoiceDTOResponse(invoiceSave.getId(),invoiceSave.getUser().getUsername(),invoiceSave.isPayment(),invoiceSave.getTotal(),invoiceSave.getDate(),
                 invoiceSave.getPromInvoiceEntities().stream()
                         .map(promInvoiceEntity -> new PromInvoiceDTOResponse(promInvoiceEntity.getId(),promInvoiceEntity.getPromAmount()))
                         .collect(Collectors.toList()),
@@ -105,7 +108,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         InvoiceEntity invoiceSave = repo.save(invoice);
 
-        return new InvoiceDTOResponse(invoiceSave.getId(),invoiceSave.getUser().getUsername(),invoiceSave.isPayment(),invoiceSave.getTotal(),
+        return new InvoiceDTOResponse(invoiceSave.getId(),invoiceSave.getUser().getUsername(),invoiceSave.isPayment(),invoiceSave.getTotal(),invoiceSave.getDate(),
                 invoiceSave.getPromInvoiceEntities().stream()
                         .map(promInvoiceEntity -> new PromInvoiceDTOResponse(promInvoiceEntity.getId(),promInvoiceEntity.getPromAmount()))
                         .collect(Collectors.toList()),
@@ -117,7 +120,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceDTOResponse> findAllInvoices() {
         return repo.findAll().stream()
-                .map(invoice -> new InvoiceDTOResponse(invoice.getId(),invoice.getUser().getUsername(),invoice.isPayment(),invoice.getTotal(),
+                .map(invoice -> new InvoiceDTOResponse(invoice.getId(),invoice.getUser().getUsername(),invoice.isPayment(),invoice.getTotal(),invoice.getDate(),
                         invoice.getPromInvoiceEntities().stream()
                                 .map(promInvoiceEntity -> new PromInvoiceDTOResponse(promInvoiceEntity.getId(),promInvoiceEntity.getPromAmount()))
                                 .collect(Collectors.toList()),
@@ -138,6 +141,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         productService.updateAmountProduct(invoiceDTO.productInvoiceDTOList());
         promService.updateAmountProm(invoiceDTO.promInvoiceDTOList());
 
-        return new InvoiceDTOResponse(invoiceDTO.id(), invoiceDTO.username(), invoiceDTO.payment(), invoiceDTO.total(),invoiceDTO.promInvoiceDTOList(),invoiceDTO.productInvoiceDTOList());
+        LocalDate date = repo.findById(invoiceDTO.id()).get().getDate();
+
+        return new InvoiceDTOResponse(invoiceDTO.id(), invoiceDTO.username(), invoiceDTO.payment(), invoiceDTO.total(),date,invoiceDTO.promInvoiceDTOList(),invoiceDTO.productInvoiceDTOList());
     }
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ public class InvoiceEntity {
     private UserEntity user;
     private boolean payment;
     private BigDecimal total;
+    private LocalDate date;
     @OneToMany(targetEntity = PromInvoiceEntity.class,cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "invoice",orphanRemoval = true)
     private List<PromInvoiceEntity> promInvoiceEntities = new ArrayList<>();
     @OneToMany(targetEntity = ProductInvoiceEntity.class,cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "invoice",orphanRemoval = true)

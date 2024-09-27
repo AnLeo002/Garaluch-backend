@@ -32,7 +32,6 @@ public class InvoiceController {
     }
     @PostMapping("/save")
     public ResponseEntity<InvoiceDTOResponse> saveInvoice(@RequestBody InvoiceDTO invoiceDTO){
-        log.info(invoiceDTO.toString());
         try{
             return new ResponseEntity<>(service.createInvoice(invoiceDTO),HttpStatus.CREATED);
         }catch(Exception e){
