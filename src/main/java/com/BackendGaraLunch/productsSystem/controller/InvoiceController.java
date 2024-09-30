@@ -53,4 +53,13 @@ public class InvoiceController {
         service.deleteInvoice(id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+    @GetMapping("/findAll/{username}")
+    public ResponseEntity findAllInvoicesByUsername(@PathVariable String username){
+        List<InvoiceDTOResponse> responses = service.findAllInvoicesByUsername(username);
+
+        if(responses.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(responses);
+    }
 }

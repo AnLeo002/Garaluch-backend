@@ -15,4 +15,5 @@ public interface InvoiceService {
     List<InvoiceDTOResponse>findAllInvoices();
     void deleteInvoice(Long id);
     InvoiceDTOResponse updateAmount(InvoiceDTO invoiceDTO);
+    List<InvoiceDTOResponse>findAllInvoicesByUsername(String username);
 }

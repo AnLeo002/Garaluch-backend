@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -144,5 +144,24 @@ public class InvoiceServiceImpl implements InvoiceService {
         LocalDate date = repo.findById(invoiceDTO.id()).get().getDate();
 
         return new InvoiceDTOResponse(invoiceDTO.id(), invoiceDTO.username(), invoiceDTO.payment(), invoiceDTO.total(),date,invoiceDTO.promInvoiceDTOList(),invoiceDTO.productInvoiceDTOList());
+    }
+
+    @Override
+    public List<InvoiceDTOResponse> findAllInvoicesByUsername(String username) {
+         List<InvoiceDTOResponse> invoiceDTOResponses = repo.findByUserUsername(username).stream()
+                .map(invoiceEntity -> new InvoiceDTOResponse(invoiceEntity.getId(),invoiceEntity.getUser().getUsername(), invoiceEntity.isPayment(), invoiceEntity.getTotal(),invoiceEntity.getDate(),
+                        invoiceEntity.getPromInvoiceEntities().stream()
+                                .map(prom -> new PromInvoiceDTOResponse(prom.getId(),prom.getPromAmount()))
+                                .collect(Collectors.toList()),
+                        invoiceEntity.getProductInvoiceEntities().stream()
+                                .map(product -> new ProductInvoiceDTOResponse(product.getId(),product.getProductAmount()))
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
+         if (invoiceDTOResponses.isEmpty()){
+             return Collections.emptyList();//Si la lista esta vacia, va a retornar la lista vacia
+         }else{
+             return invoiceDTOResponses;
+         }
     }
 }
