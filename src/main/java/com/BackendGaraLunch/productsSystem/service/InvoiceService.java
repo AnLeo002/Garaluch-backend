@@ -1,10 +1,8 @@
 package com.BackendGaraLunch.productsSystem.service;
 
+import com.BackendGaraLunch.productsSystem.service.dto.InvoiceCompleteDTOResponse;
 import com.BackendGaraLunch.productsSystem.service.dto.InvoiceDTO;
 import com.BackendGaraLunch.productsSystem.service.dto.InvoiceDTOResponse;
-import com.BackendGaraLunch.productsSystem.service.dto.ProductInvoiceDTOResponse;
-import com.BackendGaraLunch.productsSystem.service.impl.ProductServiceImpl;
-import com.BackendGaraLunch.productsSystem.service.impl.PromServiceImpl;
 
 import java.util.List;
 
@@ -16,4 +14,5 @@ public interface InvoiceService {
     void deleteInvoice(Long id);
     InvoiceDTOResponse updateAmount(InvoiceDTO invoiceDTO);
     List<InvoiceDTOResponse>findAllInvoicesByUsername(String username);
+    InvoiceCompleteDTOResponse findInvoiceWithCompletePro(Long id);
 }

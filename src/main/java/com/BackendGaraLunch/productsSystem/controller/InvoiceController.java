@@ -62,4 +62,8 @@ public class InvoiceController {
         }
         return ResponseEntity.ok(responses);
     }
+    @GetMapping("/pro/{id}")
+    public ResponseEntity findAllCompletePros(@PathVariable Long id){
+        return ResponseEntity.ok(service.findInvoiceWithCompletePro(id));
+    }
 }

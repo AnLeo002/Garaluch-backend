@@ -8,11 +8,9 @@ import com.BackendGaraLunch.productsSystem.repo.InvoiceRepo;
 import com.BackendGaraLunch.productsSystem.repo.ProductRepo;
 import com.BackendGaraLunch.productsSystem.repo.PromRepo;
 import com.BackendGaraLunch.productsSystem.service.InvoiceService;
-import com.BackendGaraLunch.productsSystem.service.dto.InvoiceDTO;
-import com.BackendGaraLunch.productsSystem.service.dto.InvoiceDTOResponse;
-import com.BackendGaraLunch.productsSystem.service.dto.ProductInvoiceDTOResponse;
-import com.BackendGaraLunch.productsSystem.service.dto.PromInvoiceDTOResponse;
+import com.BackendGaraLunch.productsSystem.service.dto.*;
 import com.BackendGaraLunch.repo.UserRepo;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -163,5 +161,17 @@ public class InvoiceServiceImpl implements InvoiceService {
          }else{
              return invoiceDTOResponses;
          }
+    }
+
+    @Override
+    public InvoiceCompleteDTOResponse findInvoiceWithCompletePro(Long id) {
+        return repo.findById(id)
+                .map(invoiceEntity -> new InvoiceCompleteDTOResponse(invoiceEntity.getId(),invoiceEntity.getUser().getUsername(), invoiceEntity.isPayment(),invoiceEntity.getTotal(),
+                        invoiceEntity.getPromInvoiceEntities().stream().map(prom -> new PromDTOResponse(prom.getId(), prom.getProm().getName(),prom.getProm().getDescription(),prom.getProm().getStartDate(),prom.getProm().getEndDate(), prom.getProm().getPrice(), prom.getProm().getUrl(), prom.getPromAmount(),
+                                prom.getProm().getProductEntities().stream()
+                                        .map(product -> new ProductDTOResponse(product.getId(), product.getName(), product.getAmount(), product.getPrice(), product.getDescription(),product.getDateBuying(),product.getCategory().getName(), product.getUrl(),product.getWeight())).collect(Collectors.toSet()))).collect(Collectors.toList()),
+                        invoiceEntity.getProductInvoiceEntities().stream()
+                        .map(product -> new ProductDTOResponse(product.getId(), product.getProduct().getName(), product.getProduct().getAmount(), product.getProduct().getPrice(), product.getProduct().getDescription(),product.getProduct().getDateBuying(),product.getProduct().getCategory().getName(), product.getProduct().getUrl(),product.getProduct().getWeight())).collect(Collectors.toList())))
+                .orElseThrow(()-> new EntityNotFoundException("La factura no se encuentra en la base de datos"));
     }
 }
